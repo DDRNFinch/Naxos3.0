@@ -1,1 +1,0 @@
-(()=>{const courses=JSON.parse(localStorage.getItem('naxos3_courses')||'[]');courses.forEach(c=>{if(c.title==='Site Carpentry'||c.title==='Architectural Joinery'){c.ref='ST0264';c.version='1.4';c.level='2';c.duration='24 months'}});localStorage.setItem('naxos3_courses',JSON.stringify(courses));if(window.state)state.courses=courses;})();
