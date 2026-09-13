@@ -1,4 +1,4 @@
-const CACHE_NAME = 'naxos3-v19';
+const CACHE_NAME = 'naxos3-v20';
 const APP_SHELL = ['./', './index.html', './styles.css', './app.js', './url-import.js', './manifest.json', './icon.svg'];
 
 self.addEventListener('install', event => {
@@ -14,5 +14,28 @@ self.addEventListener('fetch', event => {
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
-  event.respondWith(caches.match(request).then(cached => cached || fetch(request).then(response => { const copy = response.clone(); caches.open(CACHE_NAME).then(cache => cache.put(request, copy)); return response; }).catch(() => caches.match('./index.html'))));
+
+  // Always try the network first for navigation and application code. This
+  // prevents an installed PWA from remaining on an old importer/build number.
+  const networkFirst = request.mode === 'navigate' || /\.(?:html|js|css)$/.test(url.pathname) || url.pathname.endsWith('/');
+  if (networkFirst) {
+    event.respondWith(
+      fetch(request, { cache: 'no-store' })
+        .then(response => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
+          return response;
+        })
+        .catch(() => caches.match(request).then(cached => cached || caches.match('./index.html')))
+    );
+    return;
+  }
+
+  event.respondWith(
+    caches.match(request).then(cached => cached || fetch(request).then(response => {
+      const copy = response.clone();
+      caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
+      return response;
+    }).catch(() => caches.match('./index.html')))
+  );
 });
