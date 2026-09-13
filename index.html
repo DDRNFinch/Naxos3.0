@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#fff8f7" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Naxos" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <title>Naxos 3.0</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -20,6 +25,7 @@
         </div>
       </div>
       <p class="home-hint">Tap Naxos to begin</p>
+      <button id="installApp" class="install-app hidden" type="button">Install Naxos</button>
     </section>
 
     <section class="page hidden" id="ksbView"><header class="page-header"><button class="back" data-home>‹</button><div><span class="eyebrow">Naxos Courses</span><h1>KSB Courses</h1></div><button class="header-action" data-view="create">+</button></header><div class="course-list" id="ksbList"></div><div class="empty-state" id="ksbEmpty"><div class="empty-icon">K</div><h2>No KSB courses yet</h2><p>Create a course and choose KSB Course to save it here.</p><button class="outline-btn" data-view="create">Create course</button></div></section>
@@ -47,5 +53,22 @@
   </main>
   <script src="app.js"></script>
   <script src="url-import.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(console.error));
+    let deferredInstallPrompt;
+    window.addEventListener('beforeinstallprompt', event => {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      document.querySelector('#installApp')?.classList.remove('hidden');
+    });
+    document.querySelector('#installApp')?.addEventListener('click', async () => {
+      if (!deferredInstallPrompt) return;
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      document.querySelector('#installApp')?.classList.add('hidden');
+    });
+    window.addEventListener('appinstalled', () => document.querySelector('#installApp')?.classList.add('hidden'));
+  </script>
 </body>
 </html>
