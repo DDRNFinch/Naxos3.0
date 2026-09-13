@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <title>Naxos 3.0</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=20" />
 </head>
 <body>
   <main class="app-shell">
@@ -52,10 +52,10 @@
 
     <section class="page hidden" id="courseView"><header class="page-header"><button class="back" data-home>‹</button><div><span class="eyebrow" id="courseArea">Course</span><h1 id="courseHeading">Course</h1></div><button class="header-action" id="editCourse">Edit</button></header><div class="course-overview" id="courseOverview"></div></section>
   </main>
-  <script src="app.js"></script>
-  <script src="url-import.js"></script>
+  <script src="app.js?v=20"></script>
+  <script src="url-import.js?v=20"></script>
   <script>
-    if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(console.error));
+    if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=20').catch(console.error));
     let deferredInstallPrompt;
     window.addEventListener('beforeinstallprompt', event => {
       event.preventDefault();
@@ -71,7 +71,7 @@
     });
     window.addEventListener('appinstalled', () => document.querySelector('#installApp')?.classList.add('hidden'));
 
-    // Read the real GitHub Actions Pages deployment run number rather than a hard-coded app version.
+    // Read the real GitHub Actions Pages deployment run number.
     (async () => {
       const target = document.getElementById('buildVersion');
       if (!target) return;
