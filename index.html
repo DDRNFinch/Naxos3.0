@@ -1,14 +1,51 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#fff8f7"><title>Naxos 3.0</title><link rel="stylesheet" href="styles.css"></head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#fff8f7" />
+  <title>Naxos 3.0</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
 <body>
   <main class="app-shell">
-    <section class="home" id="homeView"><div class="brand-mark" aria-label="Naxos">NAXOS</div><div class="orb-wrap"><button class="naxos-orb" id="naxosOrb" aria-expanded="false" aria-controls="mainMenu"><span class="orb-glow"></span><span class="orb-core">N</span><span class="orb-label">Naxos</span></button><div class="orb-menu" id="mainMenu" aria-hidden="true"><button class="menu-card" data-view="ksb"><span class="menu-icon">K</span><span><strong>KSB Courses</strong><small>Qualifications &amp; standards</small></span><span class="chevron">›</span></button><button class="menu-card" data-view="nvq"><span class="menu-icon">N</span><span><strong>NVQ Courses</strong><small>Practical vocational courses</small></span><span class="chevron">›</span></button><button class="menu-card primary" data-view="create"><span class="menu-icon plus">+</span><span><strong>Create a course</strong><small>Build it quickly with Naxos</small></span><span class="chevron">›</span></button></div></div><p class="home-hint">Tap Naxos to begin</p></section>
+    <section class="home" id="homeView">
+      <div class="brand-mark" aria-label="Naxos">NAXOS</div>
+      <div class="orb-wrap">
+        <button class="naxos-orb" id="naxosOrb" aria-expanded="false" aria-controls="mainMenu"><span class="orb-glow"></span><span class="orb-core">N</span><span class="orb-label">Naxos</span></button>
+        <div class="orb-menu" id="mainMenu" aria-hidden="true">
+          <button class="menu-card" data-view="ksb"><span class="menu-icon">K</span><span><strong>KSB Courses</strong><small>Qualifications &amp; standards</small></span><span class="chevron">›</span></button>
+          <button class="menu-card" data-view="nvq"><span class="menu-icon">N</span><span><strong>NVQ Courses</strong><small>Practical vocational courses</small></span><span class="chevron">›</span></button>
+          <button class="menu-card primary" data-view="create"><span class="menu-icon plus">+</span><span><strong>Create a course</strong><small>Build it quickly with Naxos</small></span><span class="chevron">›</span></button>
+        </div>
+      </div>
+      <p class="home-hint">Tap Naxos to begin</p>
+    </section>
+
     <section class="page hidden" id="ksbView"><header class="page-header"><button class="back" data-home>‹</button><div><span class="eyebrow">Naxos Courses</span><h1>KSB Courses</h1></div><button class="header-action" data-view="create">+</button></header><div class="course-list" id="ksbList"></div><div class="empty-state" id="ksbEmpty"><div class="empty-icon">K</div><h2>No KSB courses yet</h2><p>Create a course and choose KSB Course to save it here.</p><button class="outline-btn" data-view="create">Create course</button></div></section>
     <section class="page hidden" id="nvqView"><header class="page-header"><button class="back" data-home>‹</button><div><span class="eyebrow">Naxos Courses</span><h1>NVQ Courses</h1></div><button class="header-action" data-view="create">+</button></header><div class="course-list" id="nvqList"></div><div class="empty-state" id="nvqEmpty"><div class="empty-icon">N</div><h2>No NVQ courses yet</h2><p>Create a course and choose NVQ Course to save it here.</p><button class="outline-btn" data-view="create">Create course</button></div></section>
-    <section class="page hidden" id="createView"><header class="page-header"><button class="back" data-home>‹</button><div><span class="eyebrow">Course Designer</span><h1>Create a course</h1></div></header><div class="builder" id="builder"><div class="progress"><span class="active"></span><span></span><span></span></div><div class="step" data-step="1"><p class="step-kicker">Step 1 of 3</p><h2>What are you creating?</h2><p class="muted">Naxos will organise the finished course into the right area.</p><div class="type-grid"><button class="type-choice" data-type="KSB"><b>KSB Course</b><span>Standards-led course with KSB mapping.</span></button><button class="type-choice" data-type="NVQ"><b>NVQ Course</b><span>Practical vocational course structure.</span></button></div></div><div class="step hidden" data-step="2"><p class="step-kicker">Step 2 of 3</p><h2>Give Naxos the raw course</h2><p class="muted">Paste the standard/KSBs or give Naxos the standard website link.</p><label>Course title<input id="courseTitle" placeholder="e.g. Bricklayer"></label><div class="two-col"><label>Standard / reference<input id="courseRef" placeholder="e.g. ST0095"></label><label>Version<input id="courseVersion" placeholder="e.g. 1.2"></label></div><div class="two-col"><label>Level<input id="courseLevel" placeholder="e.g. 2"></label><label>Duration<input id="courseDuration" placeholder="e.g. 24 months"></label></div><label>KSB data <span class="optional">paste K1/S1/B1 criteria</span><textarea id="ksbInput" rows="9" placeholder="S1 - Work safely...&#10;K1 - Understand...&#10;B1 - Demonstrate..."></textarea><button id="loadBricklayer" class="secondary" type="button">Load Bricklayer ST0095 template</button></label></div><div class="step hidden" data-step="3"><p class="step-kicker">Step 3 of 3</p><h2>Let Naxos build it</h2><p class="muted">The generated course is saved locally into KSB Courses or NVQ Courses and can be edited later.</p><div class="generation-card"><div class="mini-orb">N</div><div><strong>Auto-build enabled</strong><p>13-pack practical model · evidence prompts · Knowledge Pack · Witness Testimony · KSB mapping</p></div></div><div class="summary" id="createSummary"></div></div><div class="builder-actions"><button class="secondary hidden" id="prevStep">Back</button><button class="next" id="nextStep">Continue</button></div></div></section>
+
+    <section class="page hidden" id="createView">
+      <header class="page-header"><button class="back" data-home>‹</button><div><span class="eyebrow">Course Designer</span><h1>Create a course</h1></div></header>
+      <div class="builder" id="builder">
+        <div class="progress"><span class="active"></span><span></span><span></span></div>
+        <div class="step" data-step="1"><p class="step-kicker">Step 1 of 3</p><h2>What are you creating?</h2><p class="muted">Naxos will organise the finished course into the right area.</p><div class="type-grid"><button class="type-choice" data-type="KSB"><b>KSB Course</b><span>Standards-led course with KSB mapping.</span></button><button class="type-choice" data-type="NVQ"><b>NVQ Course</b><span>Practical vocational course structure.</span></button></div></div>
+        <div class="step hidden" data-step="2">
+          <p class="step-kicker">Step 2 of 3</p><h2>Give Naxos the raw course</h2><p class="muted">Paste the standard/KSBs or give Naxos the standard website link.</p>
+          <label>Course title<input id="courseTitle" placeholder="e.g. Bricklayer" /></label>
+          <div class="two-col"><label>Standard / reference<input id="courseRef" placeholder="e.g. ST0095" /></label><label>Version<input id="courseVersion" placeholder="e.g. 1.2" /></label></div>
+          <div class="two-col"><label>Level<input id="courseLevel" placeholder="e.g. 2" /></label><label>Duration<input id="courseDuration" placeholder="e.g. 24 months" /></label></div>
+          <label>KSB data <span class="optional">paste K1/S1/B1 criteria</span><textarea id="ksbInput" rows="9" placeholder="S1 - Work safely...&#10;K1 - Understand...&#10;B1 - Demonstrate..."></textarea></label>
+          <button id="loadBricklayer" class="secondary" type="button">Load Bricklayer ST0095 template</button>
+        </div>
+        <div class="step hidden" data-step="3"><p class="step-kicker">Step 3 of 3</p><h2>Let Naxos build it</h2><p class="muted">The generated course is saved locally into KSB Courses or NVQ Courses and can be edited later.</p><div class="generation-card"><div class="mini-orb">N</div><div><strong>Auto-build enabled</strong><p>13-pack practical model · evidence prompts · Knowledge Pack · Witness Testimony · KSB mapping</p></div></div><div class="summary" id="createSummary"></div></div>
+        <div class="builder-actions"><button class="secondary hidden" id="prevStep">Back</button><button class="next" id="nextStep">Continue</button></div>
+      </div>
+    </section>
+
     <section class="page hidden" id="courseView"><header class="page-header"><button class="back" data-home>‹</button><div><span class="eyebrow" id="courseArea">Course</span><h1 id="courseHeading">Course</h1></div><button class="header-action" id="editCourse">Edit</button></header><div class="course-overview" id="courseOverview"></div></section>
   </main>
   <script src="app.js"></script>
   <script src="url-import.js"></script>
-</body></html>
+</body>
+</html>
