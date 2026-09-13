@@ -1,4 +1,4 @@
-const CACHE_NAME = 'naxos3-v1';
+const CACHE_NAME = 'naxos3-v18';
 const APP_SHELL = ['./', './index.html', './styles.css', './app.js', './url-import.js', './manifest.json', './icon.svg'];
 
 self.addEventListener('install', event => {
