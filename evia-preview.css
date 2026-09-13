@@ -1,1 +1,35 @@
-.evia-preview-backdrop{position:fixed;inset:0;z-index:9999;background:rgba(255,248,247,.98);display:none;overflow:auto}.evia-preview-backdrop.open{display:block}.evia-preview-shell{min-height:100%;max-width:760px;margin:0 auto;padding:18px 18px 40px}.evia-preview-top{display:flex;align-items:center;justify-content:space-between;gap:12px}.evia-preview-top h2{margin:0;font-size:20px}.evia-preview-close{border:0;background:#fff;border-radius:999px;width:42px;height:42px;font-size:25px;box-shadow:0 5px 20px rgba(0,0,0,.08)}.evia-phone{max-width:430px;margin:24px auto 0;background:#fff;border-radius:32px;min-height:720px;padding:24px 18px 28px;box-shadow:0 18px 60px rgba(0,0,0,.12);position:relative;overflow:hidden}.evia-brand{font-weight:800;letter-spacing:.08em;text-align:center;font-size:13px;color:#555}.evia-orb{width:142px;height:142px;border-radius:50%;background:#ffd51f;margin:28px auto 18px;position:relative;box-shadow:0 12px 30px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center}.evia-face{width:92px;height:64px;position:relative}.evia-eye{position:absolute;top:20px;width:17px;height:24px;border-radius:50%;background:#174b55}.evia-eye.left{left:18px}.evia-eye.right{right:18px}.evia-preview-title{text-align:center;font-size:22px;font-weight:800;margin:0 0 5px}.evia-preview-sub{text-align:center;color:#777;margin:0 0 24px}.evia-pack{border:1px solid #ece8e7;border-radius:18px;padding:15px;margin-top:12px;background:#fff}.evia-pack h3{margin:0 0 5px;font-size:16px}.evia-pack-meta{font-size:12px;color:#777;margin-bottom:10px}.evia-activity{padding:10px 0;border-top:1px solid #f0eded}.evia-activity:first-of-type{border-top:0}.evia-activity strong{display:block;font-size:14px}.evia-activity p{margin:4px 0 0;font-size:13px;color:#555;line-height:1.45}.evia-pill{display:inline-block;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:700;background:#f3f0ef;margin:2px 4px 0 0}.evia-preview-button{margin-left:8px}.evia-preview-note{text-align:center;font-size:12px;color:#777;margin-top:18px}
+*{box-sizing:border-box}
+#eviaPreview{position:fixed;inset:0;z-index:9999;background:#fffdf4;color:#171a17;display:none;overflow:auto;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+#eviaPreview.open{display:block}
+.evia-preview-shell{min-height:100%;width:min(100%,430px);margin:0 auto;background:radial-gradient(circle at 50% 43%,rgba(255,213,31,.18),transparent 31%),#fffdf4;position:relative;overflow-x:hidden}
+.evia-preview-top{position:absolute;top:20px;left:20px;right:20px;z-index:5;display:flex;align-items:flex-start;justify-content:space-between;pointer-events:none}
+.evia-preview-top>div{display:none}
+.evia-preview-close{pointer-events:auto;border:0;background:#fff;border-radius:13px;width:40px;height:40px;font-size:25px;line-height:1;box-shadow:0 4px 16px rgba(40,35,10,.08);cursor:pointer;color:#174b55}
+.evia-phone{min-height:100vh;padding:28px 20px 36px;position:relative;overflow:hidden}
+.evia-brand{position:absolute;top:27px;left:24px;font-size:12px;font-weight:800;letter-spacing:.28em;color:#174b55}
+.evia-orb{width:166px;height:166px;border-radius:50%;background:radial-gradient(circle at 36% 28%,#fff29a 0,#ffe044 27%,#ffd51f 62%,#d6a900 100%);margin:112px auto 20px;position:relative;box-shadow:0 24px 60px rgba(174,139,0,.22),inset 0 2px 12px rgba(255,255,255,.48);display:flex;align-items:center;justify-content:center}
+.evia-face{width:92px;height:64px;position:relative}
+.evia-eye{position:absolute;top:20px;width:17px;height:24px;border-radius:50%;background:#174b55}
+.evia-eye.left{left:18px}.evia-eye.right{right:18px}
+.evia-preview-title{text-align:center;font-size:23px;font-weight:850;letter-spacing:-.04em;margin:0 0 5px;color:#171a17}
+.evia-preview-sub{text-align:center;color:#7b7765;font-size:12px;margin:0 0 28px}
+.evia-front-options{display:grid;gap:12px;width:100%}
+.evia-front-option{width:100%;border:1px solid rgba(35,30,8,.08);background:rgba(255,255,255,.9);backdrop-filter:blur(18px);border-radius:22px;padding:15px 16px;display:grid;grid-template-columns:44px 1fr auto 20px;align-items:center;text-align:left;gap:12px;box-shadow:0 10px 30px rgba(120,98,10,.07);cursor:pointer;color:#171a17;transition:transform .18s ease,box-shadow .18s ease}
+.evia-front-option:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(120,98,10,.11)}
+.evia-front-icon{width:44px;height:44px;border-radius:15px;background:#fff1a6;color:#174b55;display:grid;place-items:center;font-weight:850}
+.evia-front-option strong{display:block;font-size:15px}.evia-front-option small{display:block;margin-top:3px;color:#817d6c;font-size:12px;line-height:1.25}
+.evia-front-count{font-size:12px;font-weight:800;color:#817d6c}.chevron{font-size:24px;color:#b8ad75}
+.evia-section-detail{margin-top:22px;padding-bottom:20px}
+.evia-detail-head{display:grid;grid-template-columns:40px 1fr;align-items:center;gap:10px;margin:4px 0 14px}
+.evia-detail-head h3{margin:0;font-size:22px;letter-spacing:-.035em}.evia-detail-back{border:0;background:#fff;border-radius:13px;width:40px;height:40px;font-size:26px;box-shadow:0 4px 16px rgba(40,35,10,.07);cursor:pointer;color:#174b55}
+.eyebrow{font-size:10px;font-weight:850;text-transform:uppercase;letter-spacing:.12em;color:#174b55}
+.evia-pack{border:1px solid rgba(35,30,8,.08);border-radius:18px;padding:14px;margin:9px 0;background:#fff;box-shadow:0 7px 22px rgba(120,98,10,.045)}
+.evia-pack h3{margin:0 0 4px;font-size:16px}.evia-pack-meta{font-size:11px;color:#817d6c;margin-bottom:9px}
+.evia-activity-wrap{border-top:1px solid #f0eddf}.evia-activity-wrap:first-of-type{border-top:0}
+.evia-activity{width:100%;border:0;background:transparent;padding:12px 2px;display:grid;grid-template-columns:1fr 24px;gap:8px;align-items:center;text-align:left;cursor:pointer;color:#171a17}
+.evia-activity strong{display:block;font-size:14px}.evia-activity-arrow{font-size:23px;color:#b8ad75;transition:transform .16s ease}.evia-activity.open .evia-activity-arrow{transform:rotate(90deg)}
+.evia-activity-detail{padding:0 8px 13px 2px;color:#575442;font-size:12px;line-height:1.5}.evia-activity-detail p{margin:7px 0 0}.evia-activity-detail p strong{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#174b55;margin-bottom:2px}
+.evia-pill{display:inline-block;border-radius:999px;padding:4px 8px;font-size:10px;font-weight:750;background:#fff1a6;color:#174b55;margin:3px 4px 0 0}
+.evia-preview-note{text-align:center;font-size:12px;color:#817d6c;margin-top:18px;padding:16px}
+.evia-preview-button{margin-left:8px}
+@media(max-width:650px){.evia-preview-shell{width:100%}.evia-phone{padding-left:18px;padding-right:18px}.evia-preview-top{left:18px;right:18px}.evia-front-option{grid-template-columns:42px 1fr auto 18px;padding:14px}.evia-front-icon{width:42px;height:42px}}
