@@ -10,7 +10,7 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <title>Naxos 3.0</title>
-  <link rel="stylesheet" href="styles.css?v=22" />
+  <link rel="stylesheet" href="styles.css?v=23" />
 </head>
 <body>
   <main class="app-shell">
@@ -22,11 +22,11 @@
     <section class="page hidden" id="ksbView"><header class="page-header"><button class="back" data-home>‹</button><div><span class="eyebrow">Naxos Courses</span><h1>KSB Courses</h1></div><button class="header-action" data-view="create">+</button></header><div class="course-list" id="ksbList"></div><div class="empty-state" id="ksbEmpty"><div class="empty-icon">K</div><h2>No KSB courses yet</h2><p>Create a course and build the units and activities manually.</p><button class="outline-btn" data-view="create">Create course</button></div></section>
     <section class="page hidden" id="nvqView"><header class="page-header"><button class="back" data-home>‹</button><div><span class="eyebrow">Naxos Courses</span><h1>NVQ Courses</h1></div><button class="header-action" data-view="create">+</button></header><div class="course-list" id="nvqList"></div><div class="empty-state" id="nvqEmpty"><div class="empty-icon">N</div><h2>No NVQ courses yet</h2><p>Create a course and build the units and activities manually.</p><button class="outline-btn" data-view="create">Create course</button></div></section>
     <section class="page hidden" id="createView"><header class="page-header"><button class="back" data-home>‹</button><div><span class="eyebrow">Course Designer</span><h1>Create a course</h1></div></header><div class="builder" id="builder"></div></section>
-    <section class="page hidden" id="courseView"><header class="page-header"><button class="back" data-home>‹</button><div><span class="eyebrow" id="courseArea">Course</span><h1 id="courseHeading">Course</h1></div><button class="header-action" id="editCourse">Edit</button></header><div class="course-overview" id="courseOverview"></div></section>
+    <section class="page hidden" id="courseView"><header class="page-header"><button class="back" data-home>‹</button><div><span class="eyebrow" id="courseArea">Course</span><h1 id="courseHeading">Course</h1></div></header><div class="course-overview" id="courseOverview"></div></section>
   </main>
-  <script src="app.js?v=22"></script><script src="designer-patch.js?v=1"></script>
+  <script src="app.js?v=23"></script><script src="designer-patch.js?v=23"></script><script src="course-management.js?v=23"></script>
   <script>
-    if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=22').catch(console.error));
+    if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=23').catch(console.error));
     let deferredInstallPrompt;
     window.addEventListener('beforeinstallprompt', event => { event.preventDefault(); deferredInstallPrompt = event; document.querySelector('#installApp')?.classList.remove('hidden'); });
     document.querySelector('#installApp')?.addEventListener('click', async () => { if (!deferredInstallPrompt) return; deferredInstallPrompt.prompt(); await deferredInstallPrompt.userChoice; deferredInstallPrompt = null; document.querySelector('#installApp')?.classList.add('hidden'); });
