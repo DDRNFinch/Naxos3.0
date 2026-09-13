@@ -1,7 +1,7 @@
 (()=>{
 const esc=s=>String(s??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));
 function course(){const title=document.querySelector('#courseHeading')?.textContent?.trim();return JSON.parse(localStorage.getItem('naxos3_courses')||'[]').find(c=>c.title===title)||null}
-function courseMainTitle(c){const raw=String(c?.title||'').trim();return raw.replace(/\s*(v?\d+(?:\.\d+)?)\s*$/i,'').trim()||raw}
+function courseMainTitle(c){const raw=String(c?.displayTitle||c?.title||'').trim();return raw.replace(/\s*(v?\d+(?:\.\d+)?)\s*$/i,'').trim()||raw}
 const FRONT=[['trade','TRADE SKILLS','Core trade skills and occupational requirements'],['supporting','SUPPORTING','Supporting skills that can be evidenced alongside practical work'],['main','MAIN','Main occupational work and pathway skills'],['knowledge','KNOWLEDGE — STANDALONE','Knowledge requiring its own dedicated evidence activity'],['behaviours','BEHAVIOURS','Separate learner reflection and witness testimony']];
 function activityHtml(a,index,prefix='Activity'){
  const id=`evia-activity-${Math.random().toString(36).slice(2,9)}`;
