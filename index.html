@@ -24,7 +24,7 @@
     <section class="page hidden" id="createView"><header class="page-header"><button class="back" data-home>‹</button><div><span class="eyebrow">Course Designer</span><h1>Create a course</h1></div></header><div class="builder" id="builder"></div></section>
     <section class="page hidden" id="courseView"><header class="page-header"><button class="back" data-home>‹</button><div><span class="eyebrow" id="courseArea">Course</span><h1 id="courseHeading">Course</h1></div><button class="header-action" id="editCourse">Edit</button></header><div class="course-overview" id="courseOverview"></div></section>
   </main>
-  <script src="app.js?v=22"></script>
+  <script src="app.js?v=22"></script><script src="designer-patch.js?v=1"></script>
   <script>
     if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=22').catch(console.error));
     let deferredInstallPrompt;
