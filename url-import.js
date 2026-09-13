@@ -39,8 +39,7 @@
       .replace(/\r/g, '')
       .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
       .replace(/[\u2022* _`#>]/g, ' ')
-      .replace(/\bBack\s+to\s+duty\b/gi, ' ')
-      .replace(/\bBack\s+to\s+duties\b/gi, ' ')
+      .replace(/\bBack\s+to\s+dut(?:y|ies)\b/gi, ' ')
       .replace(/\s+/g, ' ')
       .trim();
   }
@@ -54,71 +53,61 @@
     return '';
   }
 
-  // Skills England pages do not always format KSBs as "K1: ...".
-  // Some use "K1 ...", and many append a "Back to duty" navigation label.
-  // Collect each criterion until the next K/S/B criterion, then remove navigation text.
+  // Skills England's rendered page can wrap a KSB heading and its description
+  // across several lines. Do not depend on a K/S/B heading being at the start
+  // of a line: locate every criterion globally and slice each description up
+  // to the next criterion. This prevents wrapped criteria being lost.
   function extractKSB(text) {
     const source = String(text || '').replace(/\r/g, '');
     const rows = [];
     const seen = new Set();
-    const lines = source.split('\n').map(line => line.trim()).filter(Boolean);
-    let current = null;
+    const heading = /(?:^|\n|\s)([KSB])\s*([0-9]{1,3})\s*(?::|[-–—])\s*/gi;
+    const matches = [];
+    let m;
 
-    const flush = () => {
-      if (!current) return;
-      let desc = cleanText(current.parts.join(' '));
+    while ((m = heading.exec(source))) {
+      const ref = `${m[1].toUpperCase()}${m[2]}`;
+      if (seen.has(ref)) continue;
+      matches.push({ ref, start: heading.lastIndex });
+      seen.add(ref);
+    }
+
+    // Some versions omit the colon/dash, so run a second pass only for refs
+    // that were not found by the primary heading pattern.
+    const loose = /(?:^|\n|\s)([KSB])\s*([0-9]{1,3})(?=\s)/gi;
+    while ((m = loose.exec(source))) {
+      const ref = `${m[1].toUpperCase()}${m[2]}`;
+      if (seen.has(ref)) continue;
+      matches.push({ ref, start: loose.lastIndex });
+      seen.add(ref);
+    }
+
+    matches.sort((a, b) => a.start - b.start);
+
+    // If the loose pass found ordinary references embedded in prose, discard
+    // them unless they form a plausible KSB sequence. The primary pass is the
+    // authoritative source on current Skills England pages.
+    const primaryRefs = new Set();
+    const primary = /(?:^|\n|\s)([KSB])\s*([0-9]{1,3})\s*(?::|[-–—])\s*/gi;
+    while ((m = primary.exec(source))) primaryRefs.add(`${m[1].toUpperCase()}${m[2]}`);
+
+    const primaryMatches = matches.filter(x => primaryRefs.has(x.ref));
+    const selected = primaryMatches.length >= 40 ? primaryMatches : matches;
+
+    for (let i = 0; i < selected.length; i++) {
+      const item = selected[i];
+      const end = i + 1 < selected.length ? selected[i + 1].start : source.length;
+      let desc = cleanText(source.slice(item.start, end));
       desc = desc
         .replace(/\s*Back\s+to\s+dut(?:y|ies)\s*/gi, ' ')
+        .replace(/\s+(?:Back|View)\s+(?:to|all)\s+.*$/i, '')
         .replace(/\s+/g, ' ')
         .trim();
-      // Navigation/heading fragments occasionally survive at the end.
-      desc = desc.replace(/\s+(?:Back|View)\s+(?:to|all)\s+.*$/i, '').trim();
-      if (current.ref && desc.length >= 5 && !seen.has(current.ref)) {
-        seen.add(current.ref);
-        rows.push(`${current.ref} - ${desc}`);
-      }
-      current = null;
-    };
-
-    for (const rawLine of lines) {
-      const line = cleanText(rawLine);
-      if (!line) continue;
-
-      // Accept K1, K 1, S1, S 1, B1, with or without :, -, en dash or em dash.
-      const match = line.match(/^([KSB])\s*([0-9]{1,3})\s*(?::|[-–—])?\s*(.*)$/i);
-      if (match) {
-        flush();
-        current = {
-          ref: `${match[1].toUpperCase()}${match[2]}`,
-          parts: match[3] ? [match[3]] : []
-        };
-        continue;
-      }
-
-      if (current) {
-        // Stop a criterion if a navigation label is presented as its own line.
-        if (/^back\s+to\s+dut(?:y|ies)$/i.test(line)) continue;
-        current.parts.push(line);
-      }
-    }
-    flush();
-
-    // Fallback for pages where several KSBs are embedded in one paragraph.
-    if (rows.length < 5) {
-      const compact = cleanText(source);
-      const re = /\b([KSB])\s*([0-9]{1,3})\s*(?::|[-–—])?\s*(.*?)(?=\b[KSB]\s*[0-9]{1,3}\s*(?::|[-–—])?\s|$)/gi;
-      let m;
-      while ((m = re.exec(compact))) {
-        const ref = `${m[1].toUpperCase()}${m[2]}`;
-        let desc = cleanText(m[3]);
-        if (desc.length >= 5 && !seen.has(ref)) {
-          seen.add(ref);
-          rows.push(`${ref} - ${desc}`);
-        }
+      if (desc.length >= 5 && !rows.some(r => r.startsWith(`${item.ref} -`))) {
+        rows.push(`${item.ref} - ${desc}`);
       }
     }
 
-    // Natural numeric ordering: K1..Kn, S1..Sn, B1..Bn.
     const order = {K: 0, S: 1, B: 2};
     rows.sort((a, b) => {
       const [, ar, an] = a.match(/^([KSB])(\d+)/) || [];
