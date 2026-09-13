@@ -53,10 +53,6 @@
     return '';
   }
 
-  // Skills England's rendered page can wrap a KSB heading and its description
-  // across several lines. Do not depend on a K/S/B heading being at the start
-  // of a line: locate every criterion globally and slice each description up
-  // to the next criterion. This prevents wrapped criteria being lost.
   function extractKSB(text) {
     const source = String(text || '').replace(/\r/g, '');
     const rows = [];
@@ -72,40 +68,13 @@
       seen.add(ref);
     }
 
-    // Some versions omit the colon/dash, so run a second pass only for refs
-    // that were not found by the primary heading pattern.
-    const loose = /(?:^|\n|\s)([KSB])\s*([0-9]{1,3})(?=\s)/gi;
-    while ((m = loose.exec(source))) {
-      const ref = `${m[1].toUpperCase()}${m[2]}`;
-      if (seen.has(ref)) continue;
-      matches.push({ ref, start: loose.lastIndex });
-      seen.add(ref);
-    }
-
     matches.sort((a, b) => a.start - b.start);
-
-    // If the loose pass found ordinary references embedded in prose, discard
-    // them unless they form a plausible KSB sequence. The primary pass is the
-    // authoritative source on current Skills England pages.
-    const primaryRefs = new Set();
-    const primary = /(?:^|\n|\s)([KSB])\s*([0-9]{1,3})\s*(?::|[-–—])\s*/gi;
-    while ((m = primary.exec(source))) primaryRefs.add(`${m[1].toUpperCase()}${m[2]}`);
-
-    const primaryMatches = matches.filter(x => primaryRefs.has(x.ref));
-    const selected = primaryMatches.length >= 40 ? primaryMatches : matches;
-
-    for (let i = 0; i < selected.length; i++) {
-      const item = selected[i];
-      const end = i + 1 < selected.length ? selected[i + 1].start : source.length;
+    for (let i = 0; i < matches.length; i++) {
+      const item = matches[i];
+      const end = i + 1 < matches.length ? matches[i + 1].start : source.length;
       let desc = cleanText(source.slice(item.start, end));
-      desc = desc
-        .replace(/\s*Back\s+to\s+dut(?:y|ies)\s*/gi, ' ')
-        .replace(/\s+(?:Back|View)\s+(?:to|all)\s+.*$/i, '')
-        .replace(/\s+/g, ' ')
-        .trim();
-      if (desc.length >= 5 && !rows.some(r => r.startsWith(`${item.ref} -`))) {
-        rows.push(`${item.ref} - ${desc}`);
-      }
+      desc = desc.replace(/\s*Back\s+to\s+dut(?:y|ies)\s*/gi, ' ').replace(/\s+/g, ' ').trim();
+      if (desc.length >= 5) rows.push(`${item.ref} - ${desc}`);
     }
 
     const order = {K: 0, S: 1, B: 2};
@@ -130,36 +99,22 @@
     const gateway = (text.match(/gateway requirements?[\s\S]{0,1600}?(?=Assessment method|Assessment methods|End-point assessment|$)/i) || [])[0] || '';
     const grading = (text.match(/(?:Overall )?grading[\s\S]{0,1200}?(?=Re-sits|Retakes|Roles and responsibilities|$)/i) || [])[0] || '';
     const pdf = (text.match(/https?:[^\s)]+\.pdf/i) || [])[0] || '';
-    return {
-      methods,
-      epaPeriod: period ? `${period} months` : '',
-      assessmentPeriod: assessmentPeriod ? `${assessmentPeriod} months` : '',
-      gatewayRequirements: cleanText(gateway),
-      grading: cleanText(grading),
-      epaPlanUrl: pdf
-    };
+    return { methods, epaPeriod: period ? `${period} months` : '', assessmentPeriod: assessmentPeriod ? `${assessmentPeriod} months` : '', gatewayRequirements: cleanText(gateway), grading: cleanText(grading), epaPlanUrl: pdf };
   }
 
   function parseStandard(text, url) {
-    const m = {
-      sourceUrl: url,
-      importedAt: new Date().toISOString(),
-      title: '', reference: '', version: '', level: '', duration: '', status: '', route: '',
-      minimumHours: '', maximumFunding: '', larsCode: '', eqaProvider: '', dateUpdated: '',
-      approvedForDelivery: '', options: '', regulated: '', regulator: '', professionalRecognition: '',
-      entryRequirements: '', englishMaths: '', review: '', ksbs: [], epaPlan: {}
-    };
-    m.title = cleanText((text.match(/^#\s+(.+)$/m) || [, ''])[1]) || findValue(text, ['Occupation title', 'Title of occupation', 'Title']);
-    m.reference = findValue(text, ['Reference Number', 'Reference', 'UOS reference number']) || (text.match(/Reference:\s*(ST\d+|FA\d+|AU\d+)/i) || [])[1] || '';
+    const m = { sourceUrl:url, importedAt:new Date().toISOString(), title:'', reference:'', version:'', level:'', duration:'', status:'', route:'', minimumHours:'', maximumFunding:'', larsCode:'', eqaProvider:'', dateUpdated:'', approvedForDelivery:'', options:'', regulated:'', regulator:'', professionalRecognition:'', entryRequirements:'', englishMaths:'', review:'', ksbs:[], epaPlan:{} };
+    m.title = cleanText((text.match(/^#\s+(.+)$/m) || [, ''])[1]) || findValue(text, ['Occupation title','Title of occupation','Title']);
+    m.reference = findValue(text, ['Reference Number','Reference','UOS reference number']) || (text.match(/Reference:\s*(ST\d+|FA\d+|AU\d+)/i) || [])[1] || '';
     m.version = findValue(text, ['Version']) || (text.match(/Version\s*:?\s*([\d.]+)/i) || [])[1] || '';
-    m.level = findValue(text, ['Level of occupation', 'Occupational Level', 'Level']).replace(/^Level\s*/i, '');
-    m.duration = findValue(text, ['Typical duration of apprenticeship', 'Typical duration']);
+    m.level = findValue(text, ['Level of occupation','Occupational Level','Level']).replace(/^Level\s*/i, '');
+    m.duration = findValue(text, ['Typical duration of apprenticeship','Typical duration']);
     m.status = findValue(text, ['Status']);
-    m.route = findValue(text, ['Route', 'Routes']);
-    m.minimumHours = findValue(text, ['Minimum hours for compliance', 'Minimum hours']);
+    m.route = findValue(text, ['Route','Routes']);
+    m.minimumHours = findValue(text, ['Minimum hours for compliance','Minimum hours']);
     m.maximumFunding = findValue(text, ['Maximum funding']);
-    m.larsCode = findValue(text, ['LARS Code', 'LARS code']);
-    m.eqaProvider = findValue(text, ['EQA Provider', 'EQA provider']);
+    m.larsCode = findValue(text, ['LARS Code','LARS code']);
+    m.eqaProvider = findValue(text, ['EQA Provider','EQA provider']);
     m.dateUpdated = findValue(text, ['Date updated']);
     m.approvedForDelivery = findValue(text, ['Approved for delivery']);
     m.options = findValue(text, ['Options']);
@@ -174,85 +129,67 @@
   }
 
   function renderMeta(m) {
-    const fields = [
-      ['Course title', m.title], ['Reference', m.reference], ['Version', m.version], ['Level', m.level],
-      ['Duration', m.duration], ['OTJ minimum', m.minimumHours], ['Maximum funding', m.maximumFunding],
-      ['Route', m.route], ['LARS code', m.larsCode], ['EQA provider', m.eqaProvider], ['Status', m.status],
-      ['Date updated', m.dateUpdated], ['Approved for delivery', m.approvedForDelivery], ['Options', m.options],
-      ['Regulated', m.regulated], ['Regulator', m.regulator], ['EPA period', m.epaPlan.epaPeriod],
-      ['Assessment period', m.epaPlan.assessmentPeriod], ['EPA methods', m.epaPlan.methods.join(' · ')],
-      ['EPA plan', m.epaPlan.epaPlanUrl ? 'PDF detected' : 'EPA plan read from source']
-    ];
-    metaBox.innerHTML = '<div class="meta-heading">Imported standard data</div>' +
-      fields.filter(x => x[1]).map(x => `<div class="meta-row"><span>${x[0]}</span><b>${String(x[1]).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}</b></div>`).join('');
+    const fields = [['Course title',m.title],['Reference',m.reference],['Version',m.version],['Level',m.level],['Duration',m.duration],['OTJ minimum',m.minimumHours],['Maximum funding',m.maximumFunding],['Route',m.route],['LARS code',m.larsCode],['EQA provider',m.eqaProvider],['Status',m.status],['Date updated',m.dateUpdated],['Approved for delivery',m.approvedForDelivery],['Options',m.options],['Regulated',m.regulated],['Regulator',m.regulator],['EPA period',m.epaPlan.epaPeriod],['Assessment period',m.epaPlan.assessmentPeriod],['EPA methods',m.epaPlan.methods.join(' · ')],['EPA plan',m.epaPlan.epaPlanUrl ? 'PDF detected' : 'EPA plan read from source']];
+    metaBox.innerHTML = '<div class="meta-heading">Imported standard data</div>' + fields.filter(x=>x[1]).map(x=>`<div class="meta-row"><span>${x[0]}</span><b>${String(x[1]).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}</b></div>`).join('');
     metaBox.classList.remove('hidden');
   }
 
   async function readStandard() {
-    const url = urlInput.value.trim();
-    if (!/^https?:\/\//i.test(url)) {
-      setStatus('Enter a full http:// or https:// website link.', 'error');
-      return;
-    }
-    button.disabled = true;
-    button.textContent = 'Reading…';
-    setStatus('Reading the standard and EPA plan…');
+    const entered = urlInput.value.trim();
+    if (!/^https?:\/\//i.test(entered)) { setStatus('Enter a full http:// or https:// website link.', 'error'); return; }
+    button.disabled = true; button.textContent = 'Reading…'; setStatus('Reading the standard and EPA plan…');
     try {
-      const targets = [url];
-      if (/skillsengland\.education\.gov\.uk\/apprenticeships\//i.test(url) && !/[?&]view=epa/i.test(url)) {
-        targets.push(url + (url.includes('?') ? '&' : '?') + 'view=epa');
+      const parsed = new URL(entered);
+      const targets = [];
+      if (/skillsengland\.education\.gov\.uk\/apprenticeships\//i.test(parsed.href)) {
+        // Always request the two explicit Skills England views. This also fixes
+        // URLs already containing ?view=standard or ?view=epa.
+        const base = `${parsed.origin}${parsed.pathname}`;
+        targets.push(`${base}?view=standard`, `${base}?view=epa`);
+      } else {
+        targets.push(entered);
       }
+
       const texts = [];
-      for (const target of targets) {
-        const r = await fetch(`https://r.jina.ai/${target}`, {headers: {Accept: 'text/plain'}});
+      for (const target of [...new Set(targets)]) {
+        const readerUrl = `https://r.jina.ai/${target}`;
+        const r = await fetch(readerUrl, {headers:{Accept:'text/plain'}, cache:'no-store'});
         if (!r.ok) throw new Error(`Reader returned ${r.status}`);
         texts.push(await r.text());
       }
 
-      const standard = parseStandard(texts[0], url);
-      standard.epaPlan = extractEPA(texts.join('\n\n'));
+      const combined = texts.join('\n\n');
+      const standard = parseStandard(texts[0], entered);
+      standard.epaPlan = extractEPA(combined);
+
+      // Merge all KSBs found across the standard and EPA views, rather than
+      // trusting whichever single page happens to contain the most criteria.
+      const merged = new Map();
+      texts.forEach(t => extractKSB(t).forEach(row => merged.set(row.split(' - ')[0], row)));
+      standard.ksbs = [...merged.values()].sort((a,b) => {
+        const [,ar,an]=a.match(/^([KSB])(\d+)/)||[]; const [,br,bn]=b.match(/^([KSB])(\d+)/)||[];
+        return ({K:0,S:1,B:2}[ar]-({K:0,S:1,B:2}[br])) || Number(an)-Number(bn);
+      });
+
       if (!standard.ksbs.length) throw new Error('No KSB criteria could be detected. Try the occupational standard page or paste the KSBs manually.');
 
-      const set = (id, value) => {
-        const el = document.querySelector(`#${id}`);
-        if (el && value) el.value = value;
-      };
-      set('courseTitle', standard.title);
-      set('courseRef', standard.reference);
-      set('courseVersion', standard.version);
-      set('courseLevel', standard.level);
-      set('courseDuration', standard.duration);
+      const set = (id,value) => { const el=document.querySelector(`#${id}`); if(el && value) el.value=value; };
+      set('courseTitle',standard.title); set('courseRef',standard.reference); set('courseVersion',standard.version); set('courseLevel',standard.level); set('courseDuration',standard.duration);
       input.value = standard.ksbs.join('\n');
-
       window.naxosImportedMetadata = standard;
       renderMeta(standard);
       setStatus(`Imported ${standard.ksbs.length} KSB criteria${standard.minimumHours ? ` · ${standard.minimumHours} OTJ hours` : ''}${standard.epaPlan.methods.length ? ' · EPA plan included' : ''}.`, 'ok');
-    } catch (error) {
-      console.error(error);
-      setStatus(`Could not read that page. ${error.message || 'Try another public standard URL.'}`, 'error');
-    } finally {
-      button.disabled = false;
-      button.textContent = 'Read standard';
-    }
+    } catch(error) {
+      console.error(error); setStatus(`Could not read that page. ${error.message || 'Try another public standard URL.'}`, 'error');
+    } finally { button.disabled=false; button.textContent='Read standard'; }
   }
 
-  button.addEventListener('click', readStandard);
-  urlInput.addEventListener('keydown', event => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      readStandard();
-    }
-  });
+  button.addEventListener('click',readStandard);
+  urlInput.addEventListener('keydown',event=>{ if(event.key==='Enter'){event.preventDefault();readStandard();} });
 
   const originalSet = localStorage.setItem.bind(localStorage);
-  localStorage.setItem = function(key, value) {
-    if (key === 'naxos3_courses' && window.naxosImportedMetadata) {
-      try {
-        const courses = JSON.parse(value);
-        if (courses[0]) courses[0].standardMetadata = window.naxosImportedMetadata;
-        value = JSON.stringify(courses);
-      } catch (_) {}
-    }
-    return originalSet(key, value);
+  localStorage.setItem = function(key,value) {
+    if(key==='naxos3_courses' && window.naxosImportedMetadata){ try { const courses=JSON.parse(value); if(courses[0]) courses[0].standardMetadata=window.naxosImportedMetadata; value=JSON.stringify(courses); } catch(_) {} }
+    return originalSet(key,value);
   };
 })();
