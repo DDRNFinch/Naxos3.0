@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="naxos-milos-orb.css?v=24" />
   <link rel="stylesheet" href="course-studio.css?v=2" />
   <link rel="stylesheet" href="evia-preview.css?v=1" />
+  <link rel="stylesheet" href="evia-preview-v2.css?v=1" />
 </head>
 <body>
   <main class="app-shell">
@@ -27,7 +28,7 @@
     <section class="page hidden" id="createView"><header class="page-header"><button class="back" data-home>‹</button><div><span class="eyebrow">Course Studio</span><h1>Create a course</h1></div></header><div class="builder" id="builder"></div></section>
     <section class="page hidden" id="courseView"><header class="page-header"><button class="back" data-home>‹</button><div><span class="eyebrow" id="courseArea">Course</span><h1 id="courseHeading">Course</h1></div></header><div class="course-overview" id="courseOverview"></div></section>
   </main>
-  <script src="app.js?v=25"></script><script src="course-management.js?v=25"></script><script src="course-studio.js?v=2"></script><script src="naxos3-seed.js?v=1"></script><script src="naxos3-course-metadata.js?v=1"></script><script src="naxos3-course-activities.js?v=1"></script><script src="naxos3-runtime-sync.js?v=1"></script><script src="evia-preview.js?v=1"></script>
+  <script src="app.js?v=25"></script><script src="course-management.js?v=25"></script><script src="course-studio.js?v=2"></script><script src="naxos3-seed.js?v=1"></script><script src="naxos3-course-metadata.js?v=1"></script><script src="naxos3-course-activities.js?v=1"></script><script src="naxos3-runtime-sync.js?v=1"></script><script src="evia-preview.js?v=2"></script>
   <script>
     (()=>{const orb=document.getElementById('naxosOrb'),character=orb?.querySelector('.naxos-character'),eyes=orb?.querySelector('.naxos-eyes');if(!orb||!character||!eyes)return;const looks=[{x:0,y:0,t:0},{x:-.038,y:0,t:-1.2},{x:.038,y:0,t:1.2},{x:0,y:-.029,t:0},{x:0,y:.029,t:.3},{x:-.029,y:-.019,t:-1.6},{x:.029,y:-.019,t:1.6},{x:-.029,y:.019,t:-1},{x:.029,y:.019,t:1}];let last=-1;function look(){let n=last;while(n===last)n=Math.floor(Math.random()*looks.length);last=n;const l=looks[n];orb.style.setProperty('--eye-x',l.x+'em');orb.style.setProperty('--eye-y',l.y+'em');orb.style.setProperty('--char-tilt',l.t+'deg')}function blink(){if(document.hidden)return;eyes.querySelectorAll('.naxos-eye').forEach(e=>e.style.transform='scaleY(.08)');setTimeout(()=>eyes.querySelectorAll('.naxos-eye').forEach(e=>e.style.transform=''),130)}function accent(){if(document.hidden||orb.getAttribute('aria-expanded')==='true')return;const names=['accent-wobble','accent-squish','accent-lean'];const name=names[Math.floor(Math.random()*names.length)];character.classList.add(name);setTimeout(()=>character.classList.remove(name),name==='accent-lean'?1400:1250)}look();setInterval(look,3600);setInterval(blink,5200);setInterval(accent,8200)})();
     if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=27').catch(console.error));
