@@ -1,0 +1,14 @@
+{
+  "name": "Naxos 3.0",
+  "short_name": "Naxos",
+  "description": "Naxos 3.0 apprenticeship course builder and KSB mapping tool.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fff8f7",
+  "theme_color": "#b51f2b",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
