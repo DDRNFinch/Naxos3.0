@@ -11,12 +11,20 @@
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <title>Naxos 3.0</title>
   <link rel="stylesheet" href="styles.css?v=24" />
+  <link rel="stylesheet" href="naxos-milos-orb.css?v=24" />
 </head>
 <body>
   <main class="app-shell">
     <section class="home" id="homeView">
       <div class="brand-mark" aria-label="Naxos">NAXOS</div>
-      <div class="orb-wrap"><button class="naxos-orb" id="naxosOrb" aria-expanded="false" aria-controls="mainMenu"><span class="orb-glow"></span><span class="orb-core">N</span><span class="orb-label">Naxos</span></button><div class="orb-menu" id="mainMenu" aria-hidden="true"><button class="menu-card" data-view="ksb"><span class="menu-icon">K</span><span><strong>KSB Courses</strong><small>Qualifications &amp; standards</small></span><span class="chevron">›</span></button><button class="menu-card" data-view="nvq"><span class="menu-icon">N</span><span><strong>NVQ Courses</strong><small>Practical vocational courses</small></span><span class="chevron">›</span></button><button class="menu-card primary" data-view="create"><span class="menu-icon plus">+</span><span><strong>Create a course</strong><small>Build every unit and activity yourself</small></span><span class="chevron">›</span></button></div></div>
+      <div class="orb-wrap">
+        <button class="naxos-orb" id="naxosOrb" aria-expanded="false" aria-controls="mainMenu" aria-label="Open Naxos">
+          <span class="orb-glow" aria-hidden="true"></span>
+          <span class="orb-core" aria-hidden="true"><span class="naxos-character"><span class="naxos-eyes"><span class="naxos-eye"></span><span class="naxos-eye"></span></span></span></span>
+          <span class="naxos-label">Naxos</span>
+        </button>
+        <div class="orb-menu" id="mainMenu" aria-hidden="true"><button class="menu-card" data-view="ksb"><span class="menu-icon">K</span><span><strong>KSB Courses</strong><small>Qualifications &amp; standards</small></span><span class="chevron">›</span></button><button class="menu-card" data-view="nvq"><span class="menu-icon">N</span><span><strong>NVQ Courses</strong><small>Practical vocational courses</small></span><span class="chevron">›</span></button><button class="menu-card primary" data-view="create"><span class="menu-icon plus">+</span><span><strong>Create a course</strong><small>Build every unit and activity yourself</small></span><span class="chevron">›</span></button></div>
+      </div>
       <p class="home-hint">Tap Naxos to begin</p><button id="installApp" class="install-app hidden" type="button">Install Naxos</button><div class="build-version" id="buildVersion" aria-label="GitHub Pages deployment version">GitHub Pages build #…</div>
     </section>
     <section class="page hidden" id="ksbView"><header class="page-header"><button class="back" data-home>‹</button><div><span class="eyebrow">Naxos Courses</span><h1>KSB Courses</h1></div><button class="header-action" data-view="create">+</button></header><div class="course-list" id="ksbList"></div><div class="empty-state" id="ksbEmpty"><div class="empty-icon">K</div><h2>No KSB courses yet</h2><p>Create a course and build the units and activities manually.</p><button class="outline-btn" data-view="create">Create course</button></div></section>
@@ -24,8 +32,9 @@
     <section class="page hidden" id="createView"><header class="page-header"><button class="back" data-home>‹</button><div><span class="eyebrow">Course Designer</span><h1>Create a course</h1></div></header><div class="builder" id="builder"></div></section>
     <section class="page hidden" id="courseView"><header class="page-header"><button class="back" data-home>‹</button><div><span class="eyebrow" id="courseArea">Course</span><h1 id="courseHeading">Course</h1></div></header><div class="course-overview" id="courseOverview"></div></section>
   </main>
-  <script src="app.js?v=23"></script><script src="designer-patch.js?v=23"></script><script src="course-management.js?v=23"></script>
+  <script src="app.js?v=24"></script><script src="designer-patch.js?v=24"></script><script src="course-management.js?v=24"></script>
   <script>
+    (()=>{const orb=document.getElementById('naxosOrb'),character=orb?.querySelector('.naxos-character'),eyes=orb?.querySelector('.naxos-eyes');if(!orb||!character||!eyes)return;const looks=[{x:0,y:0,t:0},{x:-.038,y:0,t:-1.2},{x:.038,y:0,t:1.2},{x:0,y:-.029,t:0},{x:0,y:.029,t:.3},{x:-.029,y:-.019,t:-1.6},{x:.029,y:-.019,t:1.6},{x:-.029,y:.019,t:-1},{x:.029,y:.019,t:1}];let last=-1;function look(){let n=last;while(n===last)n=Math.floor(Math.random()*looks.length);last=n;const l=looks[n];orb.style.setProperty('--eye-x',l.x+'em');orb.style.setProperty('--eye-y',l.y+'em');orb.style.setProperty('--char-tilt',l.t+'deg')}function blink(){if(document.hidden)return;eyes.querySelectorAll('.naxos-eye').forEach(e=>e.style.transform='scaleY(.08)');setTimeout(()=>eyes.querySelectorAll('.naxos-eye').forEach(e=>e.style.transform=''),130)}function accent(){if(document.hidden||orb.getAttribute('aria-expanded')==='true')return;const names=['accent-wobble','accent-squish','accent-lean'];const name=names[Math.floor(Math.random()*names.length)];character.classList.add(name);setTimeout(()=>character.classList.remove(name),name==='accent-lean'?1400:1250)}look();setInterval(look,3600);setInterval(blink,5200);setInterval(accent,8200)})();
     if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=24').catch(console.error));
     let deferredInstallPrompt;
     window.addEventListener('beforeinstallprompt', event => { event.preventDefault(); deferredInstallPrompt = event; document.querySelector('#installApp')?.classList.remove('hidden'); });
