@@ -1,0 +1,1 @@
+window.addEventListener('load',function(){var r=document.getElementById('root');if(!r)return;var rules=r.querySelectorAll('.course-rule b');rules.forEach(function(x){if(x.textContent==='9 practical units')x.textContent='10 practical units';});});
